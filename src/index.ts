@@ -145,6 +145,15 @@ export default {
 			return new Response("Not Found", { status: 404 });
 		}
 
-		return Response.redirect(redirectURL, 301);
+		// Preserve query parameters from the original request
+		const targetUrl = new URL(redirectURL);
+		const originalParams = url.searchParams;
+
+		// Add all original query parameters to the target URL
+		originalParams.forEach((value, key) => {
+			targetUrl.searchParams.set(key, value);
+		});
+
+		return Response.redirect(targetUrl.toString(), 301);
 	},
 };
